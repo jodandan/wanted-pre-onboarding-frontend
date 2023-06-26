@@ -19,20 +19,17 @@ export function Signup() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSignup = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/signup', { email, password });
+      const token = response.data.token;
+      localStorage.setItem('token', token); // JWT를 로컬 스토리지에 저장
 
-    if (isEmailValid && isPasswordValid) {
-      axios
-        .post('http://localhost:3001/api/signup', { email, password })
-        .then((response) => {
-          console.log('회원가입 성공:', response.data);
-          // 회원가입이 성공적으로 완료되면 /signin 경로로 이동합니다.
-          navigate('/signin');
-        })
-        .catch((error) => {
-          console.error('회원가입 오류:', error);
-        });
+      console.log('회원가입 성공:', response.data);
+      // 회원가입이 성공적으로 완료되면 /signin 경로로 이동합니다.
+      navigate('/signin');
+    } catch (error) {
+      console.error('회원가입 오류:', error);
     }
   };
 
@@ -56,7 +53,7 @@ export function Signup() {
         <button
           type="submit"
           data-testid="signup-button"
-          onClick={handleSubmit}
+          onClick={handleSignup}
           disabled={!isEmailValid || !isPasswordValid}
         >
           회원가입

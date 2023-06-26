@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
+import Todo from './components/Todo';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <Routes>
          <Route path="/" element={<Signup />} />
          <Route path="/signin" element={<Signin />} />
-        {/* 다른 경로에 대한 라우트도 추가할 수 있습니다 */}
+         <Route path="/todo" element={<Todo />} />
       </Routes>
     </Router>
   );
