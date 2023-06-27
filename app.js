@@ -10,6 +10,27 @@ app.use(cors());
 // 임시로 저장할 회원 정보
 let users = [];
 
+// 미들웨어 함수: 토큰 검증 및 리다이렉트
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]; // 헤더에서 토큰 추출
+
+  if (token) {
+    jwt.verify(token, 'your-secret-key', (err, decoded) => {
+      if (err) {
+        // 토큰이 유효하지 않은 경우, /signin 경로로 리다이렉트
+        res.redirect('/signin');
+      } else {
+        // 토큰이 유효한 경우, 다음 미들웨어 함수 호출
+        req.user = decoded;
+        next();
+      }
+    });
+  } else {
+    // 토큰이 없는 경우, /signin 경로로 리다이렉트
+    res.redirect('/signin');
+  }
+};
+
 // 회원가입 라우트 핸들러
 app.post('/api/signup', (req, res) => {
   const { email, password } = req.body;
@@ -49,8 +70,8 @@ app.post('/api/login', (req, res) => {
   res.status(200).json({ token });
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
+app.get('/signin', verifyToken, (req, res) => {
+  res.send('Signin Page');
 });
 
 // 서버를 실행합니다.
