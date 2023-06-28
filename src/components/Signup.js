@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+ 
   const isEmailValid = email.includes('@');
   const isPasswordValid = password.length >= 8;
 
@@ -25,7 +25,7 @@ export function Signup() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
+   
   const handleSignup = async () => {
     try {
       const response = await axios.post('http://localhost:3001/api/signup', { email, password });
