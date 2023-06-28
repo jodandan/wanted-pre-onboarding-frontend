@@ -18,7 +18,7 @@ export function Signup() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
+   
   const handleSignup = async () => {
     try {
       const response = await axios.post('http://localhost:3001/api/signup', { email, password });
