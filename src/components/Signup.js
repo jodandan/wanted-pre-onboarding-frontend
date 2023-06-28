@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+ 
   const isEmailValid = email.includes('@');
   const isPasswordValid = password.length >= 8;
 
