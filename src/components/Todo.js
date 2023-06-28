@@ -1,4 +1,81 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const TodoWrapper = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const TodoHeader = styled.h2`
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+`;
+
+const TodoList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+`;
+
+const TodoItem = styled.li`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const TodoCheckbox = styled.input`
+  margin-right: 10px;
+`;
+
+const TodoText = styled.span`
+  flex: 1;
+  text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
+  color: ${({ completed }) => (completed ? '#999' : '#333')};
+`;
+
+const TodoButton = styled.button`
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #999;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #666;
+  }
+`;
+
+const TodoInput = styled.input`
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+
 
 function Todo() {
   const [todos, setTodos] = useState([]);
@@ -75,55 +152,54 @@ function Todo() {
   };
 
   return (
-    <div>
-      <h2>Todo List</h2>
-      <ul>
-        {todos.map((todo) => (  // todos 배열 순회.
-          <li key={todo.id}> 
-          {/* todo의 항목들을 li태그로 감싸서, id값을 비교 */}
-            {editingTodoId === todo.id ? ( //editingTodoId 와 현재 Todo의 id비교
-              <div> 
-                <input //일치하면 수정모드 진입
+    <TodoWrapper>
+      <TodoHeader>Todo List</TodoHeader>
+      <TodoList>
+        {todos.map((todo) => (
+          <TodoItem key={todo.id}>
+            {editingTodoId === todo.id ? (
+              <div>
+                <TodoInput
                   type="text"
                   value={editingTodoText}
-                  onChange={handleEditInputChange} 
+                  onChange={handleEditInputChange}
                 />
-                <button onClick={handleSaveEdit}>제출</button>
-                <button onClick={handleCancelEdit}>취소</button>
+                <TodoButton onClick={handleSaveEdit}>제출</TodoButton>
+                <TodoButton onClick={handleCancelEdit}>취소</TodoButton>
               </div>
             ) : (
               <div>
-                <label> 
-                    {/* 일반모드 진입 */}
-                  <input //todo의 완료 여부를 표시하는 체크박스
+                <label>
+                  <TodoCheckbox
                     type="checkbox"
-                    checked={todo.completed} 
-                    onChange={() => handleTodoComplete(todo.id)} 
-                    // 화살표함수를 사용하지 않으면, 체크박스가 렌더링 될때마다 함수가 호출된다. 
-                    //따라서 화살표함수를 사용함으로서 함수 호출을 지연시키고 이벤트가 발생될때만 실행한다. 
+                    checked={todo.completed}
+                    onChange={() => handleTodoComplete(todo.id)}
                   />
-                  <span>{todo.text}</span> 
-                  {/* todo의 텍스트 내용 표시 */}
+                  <TodoText completed={todo.completed}>{todo.text}</TodoText>
                 </label>
-                <button onClick={() => handleTodoEdit(todo.id)}>수정</button>
-                <button onClick={() => handleTodoDelete(todo.id)}>삭제</button>
+                <TodoButton onClick={() => handleTodoEdit(todo.id)}>
+                  수정
+                </TodoButton>
+                <TodoButton onClick={() => handleTodoDelete(todo.id)}>
+                  삭제
+                </TodoButton>
               </div>
             )}
-          </li>
+          </TodoItem>
         ))}
-      </ul>
+      </TodoList>
       <div>
-        <input
+        <TodoInput
           type="text"
           value={newTodo}
           onChange={handleInputChange}
           data-testid="new-todo-input"
         />
-        <button onClick={handleAddTodo} data-testid="new-todo-add-button">
+        <TodoButton onClick={handleAddTodo} data-testid="new-todo-add-button">
           추가
-        </button>
+        </TodoButton>
       </div>
-    </div>
+    </TodoWrapper>
   );
 }
 
