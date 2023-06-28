@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +10,13 @@ export function Signin() {
   const isPasswordValid = password.length >= 8;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/todo');
+    }
+  }, [navigate]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
