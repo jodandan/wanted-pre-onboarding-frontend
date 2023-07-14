@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+
 
 const TodoWrapper = styled.div`
   max-width: 400px;
@@ -14,6 +17,11 @@ const TodoWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+
+  @media screen and (max-width: 768px) {
+    max-width: 300px;
+    padding: 10px;
+  }
 `;
 
 const TodoHeader = styled.h2`
@@ -21,12 +29,21 @@ const TodoHeader = styled.h2`
   color: #333;
   margin-bottom: 20px;
   font-size: 24px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 `;
 
 const TodoList = styled.ul`
   list-style: none;
   padding: 0;
   margin-bottom: 20px;
+
+  @media screen and (max-width: 768px) {
+    margin-bottom: 10px;
+  }
 `;
 
 const TodoItem = styled.li`
@@ -73,15 +90,37 @@ const TodoInput = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-`;
 
+  @media screen and (max-width: 768px) {
+    margin-bottom: 5px;
+  }
+`;
 
 
 function Todo() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
-  const [editingTodoId, setEditingTodoId] = useState(null); //처음 로드할땐 아무것도 수정중이 아니기에 초기값에 Null 삽입
+  const [editingTodoId, setEditingTodoId] = useState(null);
   const [editingTodoText, setEditingTodoText] = useState('');
+  const history = useHistory();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const path = window.location.pathname;
+  
+    if (path === '/signin' || path === '/signup') {
+      if (token) {
+        history.push('/todo');
+      }
+    } else if (path === '/todo') {
+      if (!token) {
+        history.push('/signin');
+      }
+    }
+  }, [history]);
+  
+  
+  
 
   // 새로운 TODO 입력값 변경 처리
   const handleInputChange = (event) => {
